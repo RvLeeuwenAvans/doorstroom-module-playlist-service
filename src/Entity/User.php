@@ -49,7 +49,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     public function setUsername(string $username): ?string
     {
-        return $this->username;
+        return $this->username = $username;
     }
 
     public function getEmail(): ?string

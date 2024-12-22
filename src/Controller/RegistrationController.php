@@ -21,6 +21,12 @@ class RegistrationController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            /** @var string $username */
+            $username = $form->get('username')->getData();
+
+            // set username for user
+            $user->setUsername($username);
+
             /** @var string $plainPassword */
             $plainPassword = $form->get('plainPassword')->getData();
 
@@ -31,7 +37,7 @@ class RegistrationController extends AbstractController
             $entityManager->flush();
 
             // do anything else you need here, like send an email
-            return $this->redirectToRoute('_preview_error');
+            return $this->redirectToRoute('/');
         }
 
         return $this->render('registration/register.html.twig', [
