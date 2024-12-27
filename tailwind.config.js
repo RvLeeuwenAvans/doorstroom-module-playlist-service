@@ -20,6 +20,11 @@ module.exports = {
                 accentText: ["Adamina", "Regular"],
                 bodyText: ["Chenla", "Regular"],
             },
+            // screens: {
+            //     'mobile': {
+            //         'raw': '@media (min-width: 768px) and (orientation: landscape)'
+            //     },
+            // }
         },
     },
     plugins: [tailwindForm],

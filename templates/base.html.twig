@@ -15,9 +15,9 @@
     {% endblock %}
 </head>
 <body>
-    <div class="w-full h-screen bg-no-repeat bg-cover"
+    <div class="w-full h-svh bg-no-repeat bg-cover"
          style="background-image:url('{{ asset('images/background.png') }}')">
-        <div id="content_wrapper" class="w-full h-screen bg-theme-blue bg-opacity-90">
+        <div id="content_wrapper" class="w-full h-svh bg-theme-blue bg-opacity-90 overflow-scroll">
             {% block body %}{% endblock %}
         </div>
     </div>
