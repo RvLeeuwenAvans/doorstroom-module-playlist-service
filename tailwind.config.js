@@ -17,14 +17,9 @@ module.exports = {
             },
             fontFamily: {
                 headingText: ['"Baloo 2"', "Regular"],
-                accentText: ["Adamina", "Regular"],
-                bodyText: ["Chenla", "Regular"],
+                accentText: ['"Adamina"', "Regular"],
+                bodyText: ['"Lato"', "Regular"],
             },
-            // screens: {
-            //     'mobile': {
-            //         'raw': '@media (min-width: 768px) and (orientation: landscape)'
-            //     },
-            // }
         },
     },
     plugins: [tailwindForm],
