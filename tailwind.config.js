@@ -12,6 +12,9 @@ module.exports = {
             colors: {
                 'theme-form': '#f4f1f1',
                 'theme-form-header': '#e0e0e3',
+                'theme-accent-1': '#F1FAEE',
+                'theme-accent-2': '#A8DADC',
+                'theme-accent-3': '#45789D',
                 'theme-blue': '#1D3557',
                 'theme-red': '#E63946',
             },
