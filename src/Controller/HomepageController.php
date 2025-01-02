@@ -18,6 +18,6 @@ class HomepageController extends AbstractController
     #[Route(path: '/home', name: 'app_home')]
     public function logout(): Response
     {
-        return $this->render('base.html.twig');
+        return $this->render('music.html.twig');
     }
 }

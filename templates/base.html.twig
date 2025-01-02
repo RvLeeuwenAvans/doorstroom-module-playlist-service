@@ -12,43 +12,42 @@
         <link rel="stylesheet" href="{{ asset('styles/app.css') }}">
     {% endblock %}
 
-    {% block javascripts %}
-        {% block importmap %}{{ importmap('app') }}{% endblock %}
-    {% endblock %}
+{#    {% block javascripts %}#}
+{#        {% block importmap %}{{ importmap('app') }}{% endblock %}#}
+{#    {% endblock %}#}
 </head>
-
-<header>
-    <nav id="positional_wrapper" class="relative">
-        <div class="fixed z-20 bg-opacity-0 w-full">
-            <div class="flex justify-end">
-                <input type="checkbox" name="hamburger" id="hamburger" class="peer hidden">
-                <label for="hamburger" class="peer-checked:hamburger relative z-20 p-6 cursor-pointer lg:hidden">
-                    <div class="m-auto h-0.5 w-6 rounded bg-white transition duration-200"></div>
-                    <div class="m-auto mt-2 h-0.5 w-6 rounded bg-white transition duration-200"></div>
-                    <div class="m-auto mt-2 h-0.5 w-6 rounded bg-white"></div>
-                </label>
-                <div class="peer-checked:translate-x-0 fixed inset-0 translate-x-[-100%]
-                     transition duration-200 lg:static bg-theme-blue lg:md:bg-opacity-0 sm:bg-opacity-95">
-                    <div class="flex flex-col h-full items-center justify-center lg:flex-row
-                        lg:grid lg:grid-cols-3 text-white text-xl">
-                        {% if app.user %}
-                            <a href="{{ path('app_logout') }}">Logout</a>
-                        {% else %}
-                            <a href="{{ path('app_login') }}">Login</a>
-                            <a href="{{ path('app_register') }}">Register</a>
-                        {% endif %}
+<body>
+    <header>
+        <nav id="positional_wrapper" class="relative">
+            <div class="fixed z-20 bg-opacity-0 w-full">
+                <div class="flex justify-end">
+                    <input type="checkbox" name="hamburger" id="hamburger" class="peer hidden">
+                    <label for="hamburger" class="peer-checked:hamburger relative z-20 p-6 cursor-pointer lg:hidden">
+                        <div class="m-auto h-0.5 w-6 rounded bg-white transition duration-200"></div>
+                        <div class="m-auto mt-2 h-0.5 w-6 rounded bg-white transition duration-200"></div>
+                        <div class="m-auto mt-2 h-0.5 w-6 rounded bg-white"></div>
+                    </label>
+                    <div class="peer-checked:translate-x-0 fixed inset-0 translate-x-[-100%]
+                         transition duration-200 lg:static bg-theme-blue lg:md:bg-opacity-0 sm:bg-opacity-95">
+                        <div class="flex flex-col h-full items-center justify-center lg:flex-row
+                            lg:grid lg:grid-cols-3 text-white text-xl">
+                            {% if app.user %}
+                                <a href="{{ path('app_logout') }}">Logout</a>
+                            {% else %}
+                                <a href="{{ path('app_login') }}">Login</a>
+                                <a href="{{ path('app_register') }}">Register</a>
+                            {% endif %}
+                        </div>
                     </div>
                 </div>
             </div>
+        </nav>
+    </header>
+    <div class="w-full h-svh bg-no-repeat bg-cover"
+         style="background-image:url('{{ asset('images/background.png') }}')">
+        <div id="content_wrapper" class="w-full h-svh bg-theme-blue bg-opacity-90 overflow-scroll">
+            {% block body %}{% endblock %}
         </div>
-    </nav>
-</header>
-<body>
-<div class="w-full h-svh bg-no-repeat bg-cover"
-     style="background-image:url('{{ asset('images/background.png') }}')">
-    <div id="content_wrapper" class="w-full h-svh bg-theme-blue bg-opacity-90 overflow-scroll">
-        {% block body %}{% endblock %}
     </div>
-</div>
 </body>
 </html>
