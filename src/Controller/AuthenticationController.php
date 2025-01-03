@@ -23,7 +23,7 @@ class AuthenticationController extends AbstractController
     ): Response
     {
         if ($this->getUser() !== null) {
-            return $this->redirectToRoute('app_home');
+            return $this->redirectToRoute('app_music');
         }
 
         $user = new User();
@@ -56,12 +56,12 @@ class AuthenticationController extends AbstractController
     public function login(AuthenticationUtils $authenticationUtils): Response
     {
         if ($this->getUser() !== null) {
-            return $this->redirectToRoute('app_home');
+            return $this->redirectToRoute('app_music');
         }
 
-        $form = $this->createForm(LoginFormType::class);
         // Handling of the form submission and user authentication is handled
         // automatically by: FormLoginAuthenticator.php defined in security.yaml.
+        $form = $this->createForm(LoginFormType::class);
 
         // Get the login error if there is one and pass it to the view, to display the message.
         $error = $authenticationUtils->getLastAuthenticationError();
