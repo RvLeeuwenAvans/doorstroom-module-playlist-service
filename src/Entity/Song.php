@@ -17,6 +17,8 @@ class Song
     private ?string $name = null;
 
     #[ORM\Column(length: 255)]
+    // foreign key relationship, the genre of a song should exist in the genres table.
+    #[ORM\OneToOne(Genre::class, "id")]
     private ?string $band = null;
 
     #[ORM\Column(length: 255)]
