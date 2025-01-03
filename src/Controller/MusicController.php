@@ -13,6 +13,7 @@ use Symfony\Component\Routing\Attribute\Route;
 
 class MusicController extends AbstractController
 {
+    //todo: separate the get and post method into separate functions
     #[Route(path: '/music', name: 'app_music')]
     public function addSong(
         Request                $request,

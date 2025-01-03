@@ -1,0 +1,31 @@
+{% extends 'base.html.twig' %}
+{% block title %}Register{% endblock %}
+
+{% block body %}
+    <div class="flex flex-wrap h-screen justify-center items-center">
+        <div class="relative h-auto w-3/4 lg:w-3/5">
+            <input type="checkbox" id="create_playlist" class="peer hidden">
+            <div id="add_playlist_menu">
+                <div class="p-4 bg-theme-blue flex justify-center w-full rounded-tr-3xl">
+                    <h1 class="font-headingText font-medium text-5xl text-theme-accent-1">Create a playlist</h1>
+                </div>
+                <div id="playlist_management_ribbon" class="bg-theme-accent-3 p-2 flex justify-center lg:justify-end">
+                    <label for="create_playlist"
+                           class="peer-checked:create_playlist bg-theme-red text-white font-headingText p-2">
+                        <span>&#8592;</span> Back to Playlists
+                    </label>
+                </div>
+                <div id="form_wrapper" class="z-10 p-4 bg-theme-form rounded-bl-3xl w-full">
+                    {{ form_errors(addPlaylistForm) }}
+
+                    {{ form_start(addPlaylistForm) }}
+                    {{ form_row(addPlaylistForm.name) }}
+                    <button type="submit" class="w-full bg-theme-red p-2 text-white font-headingText">
+                        SUBMIT
+                    </button>
+                    {{ form_end(addPlaylistForm) }}
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
