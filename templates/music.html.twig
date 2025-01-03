@@ -4,7 +4,11 @@
 {% block body %}
     <div class="flex flex-wrap h-screen justify-center items-center">
         <div class="relative h-auto w-3/4 lg:w-3/5">
-            <input type="checkbox" id="add_song" class="peer hidden">
+            <input type="checkbox" id="add_song" class="peer hidden"
+                    {% if showForm %}
+                        checked
+                    {% endif %}
+            >
             <div id="music_selection" class="peer-checked:hidden">
                 <div class="p-4 bg-theme-blue flex justify-center w-full rounded-tr-3xl">
                     <h1 class="font-headingText font-medium text-5xl text-theme-accent-1">Music</h1>
@@ -13,29 +17,30 @@
                     <div class="flex justify-center lg:justify-between flex-wrap flex-col lg:flex-row">
                         <div id="filter_wrapper" class="lg:mr-4">
                             <form method="get">
-                            <label for="genre" class="sm:md:block lg:inline">Filter by genre:</label>
+                                <label for="genre" class="sm:md:block lg:inline">Filter by genre:</label>
                                 <select name="genre" id="genre" onchange="submit()">
                                     <option selected disabled hidden>Select filter</option>
                                     <option value="">Everything</option>
-                                    {% for song in songs %}
-                                    <option>{{ song.genre }}</option>
+                                    {% for genre in genres %}
+                                        <option>{{ genre.name }}</option>
                                     {% endfor %}
                                 </select>
                             </form>
                         </div>
-                        <label for="add_song" class="peer-checked:add_song bg-theme-red text-white font-headingText p-2">
-                            <span>&#43;</span > Add a song
+                        <label for="add_song"
+                               class="peer-checked:add_song bg-theme-red text-white font-headingText p-2">
+                            <span>&#43;</span> Add a song
                         </label>
                     </div>
                 </div>
                 <div id="music_wrapper" class="z-10 p-4 bg-theme-form rounded-bl-3xl w-full">
                     <ul class="divide-y divide-gray-200 dark:divide-gray-700">
                         {% for song in songs %}
-                            {% if song.genre == filter or filter == "everything" %}
+                            {% if song.genre.name == filter or filter == "everything" %}
                                 <li class="pb-3 sm:pb-4">
                                     <div class="flex items-center flex flex-col lg:flex-row justify-around">
                                         <div class="flex-shrink-0 w-1/4 text-center">
-                                            {{ song.genre }}
+                                            {{ song.genre.name }}
                                         </div>
                                         <div class="flex items-center flex-col justify-center w-1/4">
                                             <p class="text-sm font-medium text-gray-900 truncate">

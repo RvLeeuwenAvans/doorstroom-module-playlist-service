@@ -4,8 +4,11 @@ namespace App\Entity;
 
 use App\Repository\SongRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 #[ORM\Entity(repositoryClass: SongRepository::class)]
+#[ORM\UniqueConstraint(name: 'UNIQ_IDENTIFIER_NAME', fields: ['name'])]
+#[UniqueEntity(fields: ['name'], message: 'Song with this name already exists')]
 class Song
 {
     #[ORM\Id]
@@ -17,12 +20,11 @@ class Song
     private ?string $name = null;
 
     #[ORM\Column(length: 255)]
-    // foreign key relationship, the genre of a song should exist in the genres table.
-    #[ORM\OneToOne(Genre::class, "id")]
     private ?string $band = null;
 
-    #[ORM\Column(length: 255)]
-    private ?string $genre = null;
+    // foreign key relationship, the genre of a song should exist in the genres table.
+    #[ORM\ManyToOne(targetEntity: Genre::class, inversedBy: 'name')]
+    private ?Genre $genre = null;
 
     #[ORM\Column(length: 255)]
     private ?string $link = null;
@@ -56,12 +58,12 @@ class Song
         return $this;
     }
 
-    public function getGenre(): ?string
+    public function getGenre(): ?Genre
     {
         return $this->genre;
     }
 
-    public function setGenre(string $genre): static
+    public function setGenre(Genre $genre): static
     {
         $this->genre = $genre;
 

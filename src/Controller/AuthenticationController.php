@@ -59,9 +59,9 @@ class AuthenticationController extends AbstractController
             return $this->redirectToRoute('app_music');
         }
 
-        $form = $this->createForm(LoginFormType::class);
         // Handling of the form submission and user authentication is handled
         // automatically by: FormLoginAuthenticator.php defined in security.yaml.
+        $form = $this->createForm(LoginFormType::class);
 
         // Get the login error if there is one and pass it to the view, to display the message.
         $error = $authenticationUtils->getLastAuthenticationError();

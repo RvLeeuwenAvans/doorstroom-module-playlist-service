@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\Genre;
 use App\Entity\Song;
 use App\Form\AddSongFormType;
 use Doctrine\ORM\EntityManagerInterface;
@@ -26,34 +27,37 @@ class MusicController extends AbstractController
         if ($request->isMethod('POST')) {
             $form->handleRequest($request);
 
-            if ($form->isSubmitted() && $form->isValid()) {
-                /** @var string $name */
-                $name = $form->get('name')->getData();
-                $song->setName($name);
-                /** @var string $band */
-                $band = $form->get('band')->getData();
-                $song->setBand($band);
-                /** @var string $genre */
-                $genre = $form->get('genre')->getData();
-                $song->setGenre($genre);
-                /** @var string $link */
-                $link = $form->get('link')->getData();
-                $song->setLink($link);
+            if ($form->isSubmitted()) {
+                if ($form->isValid()) {
+                    /** @var string $name */
+                    $name = $form->get('name')->getData();
+                    $song->setName($name);
+                    /** @var string $band */
+                    $band = $form->get('band')->getData();
+                    $song->setBand($band);
+                    /** @var Genre $genre */
+                    $genre = $form->get('genre')->getData();
+                    $song->setGenre($genre);
+                    /** @var string $link */
+                    $link = $form->get('link')->getData();
+                    $song->setLink($link);
 
-                $entityManager->persist($song);
-                $entityManager->flush();
+                    $entityManager->persist($song);
+                    $entityManager->flush();
+                }
             }
+            $showForm = !$form->isValid();
         }
 
         $songCatalog = $entityManager->getRepository(Song::class)->findAll();
-        // todo: make separate table for genres, get all genres here and inject intro template
-        // alter music form to make genres a select box
-//        $genres = ded
+        $genres = $entityManager->getRepository(Genre::class)->findAll();
 
         return $this->render('music.html.twig', [
             'addMusicForm' => $form,
             'songs' => $songCatalog,
-            'filter' => $filter
+            'genres' => $genres,
+            'filter' => $filter,
+            'showForm' => $showForm ?? false
         ]);
     }
 }
