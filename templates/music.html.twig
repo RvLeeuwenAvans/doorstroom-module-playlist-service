@@ -12,11 +12,16 @@
                 <div id="music_management_ribbon" class="bg-theme-accent-3 p-2 flex justify-center lg:justify-end">
                     <div class="flex justify-center lg:justify-between flex-wrap flex-col lg:flex-row">
                         <div id="filter_wrapper" class="lg:mr-4">
+                            <form method="get">
                             <label for="genre" class="sm:md:block lg:inline">Filter by genre:</label>
-                            <select id="genre">
-                                <option>All</option>
-                                <option>Everything</option>
-                            </select>
+                                <select name="genre" id="genre" onchange="submit()">
+                                    <option selected disabled hidden>Select filter</option>
+                                    <option value="">Everything</option>
+                                    {% for song in songs %}
+                                    <option>{{ song.genre }}</option>
+                                    {% endfor %}
+                                </select>
+                            </form>
                         </div>
                         <label for="add_song" class="peer-checked:add_song bg-theme-red text-white font-headingText p-2">
                             <span>&#43;</span > Add a song
@@ -26,26 +31,28 @@
                 <div id="music_wrapper" class="z-10 p-4 bg-theme-form rounded-bl-3xl w-full">
                     <ul class="divide-y divide-gray-200 dark:divide-gray-700">
                         {% for song in songs %}
-                        <li class="pb-3 sm:pb-4">
-                            <div class="flex items-center flex flex-col lg:flex-row justify-around">
-                                <div class="flex-shrink-0">
-                                    {{ song.genre }}
-                                </div>
-                                <div class="flex items-center flex-col justify-center">
-                                    <p class="text-sm font-medium text-gray-900 truncate">
-                                        {{ song.band }}
-                                    </p>
-                                    <p class="text-sm text-gray-500 truncate">
-                                        {{ song.name }}
-                                    </p>
-                                </div>
-                                <div class="flex">
-                                    <a class="text-center" href="{{ song.link }}" target="_blank">
-                                        {{ song.link }}
-                                    </a>
-                                </div>
-                            </div>
-                        </li>
+                            {% if song.genre == filter or filter == "everything" %}
+                                <li class="pb-3 sm:pb-4">
+                                    <div class="flex items-center flex flex-col lg:flex-row justify-around">
+                                        <div class="flex-shrink-0 w-1/4 text-center">
+                                            {{ song.genre }}
+                                        </div>
+                                        <div class="flex items-center flex-col justify-center w-1/4">
+                                            <p class="text-sm font-medium text-gray-900 truncate">
+                                                {{ song.band }}
+                                            </p>
+                                            <p class="text-sm text-gray-500 truncate">
+                                                {{ song.name }}
+                                            </p>
+                                        </div>
+                                        <div class="flex w-2/4">
+                                            <a class="text-center w-full" href="{{ song.link }}" target="_blank">
+                                                {{ song.link }}
+                                            </a>
+                                        </div>
+                                    </div>
+                                </li>
+                            {% endif %}
                         {% endfor %}
                     </ul>
                 </div>
