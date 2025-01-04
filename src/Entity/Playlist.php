@@ -24,14 +24,14 @@ class Playlist
     #[ORM\Column(length: 255)]
     private ?string $name = null;
 
-    #[ORM\ManyToOne(inversedBy: 'playlists')]
+    #[ORM\ManyToOne(inversedBy: 'ownedPlaylists')]
     #[ORM\JoinColumn(nullable: false)]
     private ?User $Owner = null;
 
     /**
      * @var Collection<int, User>
      */
-    #[ORM\ManyToMany(targetEntity: User::class)]
+    #[ORM\ManyToMany(targetEntity: User::class, inversedBy: 'PlaylistsSharedWithUser')]
     private Collection $sharedUsers;
 
     public function __construct()

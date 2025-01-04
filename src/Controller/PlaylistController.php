@@ -14,7 +14,7 @@ use Symfony\Component\Routing\Attribute\Route;
 class PlaylistController extends AbstractController
 {
     //todo: separate the get and post method into separate functions
-    #[Route(path: '/playlists', name: 'app_playlists')]
+    #[Route(path: '/playlists', name: 'app_user_playlists')]
     public function addPlaylist(
         Request                $request,
         EntityManagerInterface $entityManager
@@ -37,15 +37,52 @@ class PlaylistController extends AbstractController
             }
         }
 
-        return $this->render('playlist.html.twig', [
+        $ownedPlaylists = $this->getUser()->getOwnedPlaylists();
+
+        return $this->render('playlist/owned_playlists.html.twig', [
             'addPlaylistForm' => $form,
+            'ownedPlaylists' => $ownedPlaylists,
         ]);
+    }
+
+    #[Route(path: '/playlists/shared', name: 'app_shared_playlists', methods: ['GET'])]
+    public function viewSharedPlaylists(): Response
+    {
+        $sharedPlaylists = $this->getUser()->getPlaylistsSharedWithUser();
+
+        return $this->render('playlist/shared_playlists.html.twig', [
+            'sharedPlaylists' => $sharedPlaylists,
+        ]);
+    }
+
+    #[Route(path: '/playlists/{playlistId}', name: 'app_view_playlist')]
+    public function viewPlaylist(int $playlistId, EntityManagerInterface $entityManager): Response
+    {
+        /** @var Playlist $playlist */
+        $playlist = $entityManager->getRepository(Playlist::class)->findOneBy(["id" => $playlistId]);
+
+        // check if user is allowed to view playlist
+        if (
+            !is_null($playlist) && (
+                $playlist->getOwner() === $this->getUser() ||
+                $playlist->getSharedUsers()->contains($this->getUser())
+            )
+        ) {
+            $playlistSongs = $playlist->getSongs();
+
+            return $this->render('playlist/view_playlist.html.twig', [
+                "playlist" => $playlist,
+                "playlistSongs" => $playlistSongs,
+            ]);
+        }
+
+        return $this->redirectToRoute('app_user_playlists');
     }
 
     //todo: separate the get and post method into separate functions
     #[Route(path: '/playlists/music', name: 'app_add_to_playlist', methods: ['POST'])]
     public function addMusicToPlaylist(
-        Request $request,
+        Request                $request,
         EntityManagerInterface $entityManager
     ): Response
     {
@@ -60,8 +97,11 @@ class PlaylistController extends AbstractController
         $entityManager->persist($playlist);
         $entityManager->flush();
 
-        return $this->render('playlist.html.twig', [
-            "addPlaylistForm" => $form
+        $ownedPlaylists = $this->getUser()->getOwnedPlaylists();
+
+        return $this->render('playlist/owned_playlists.html.twig', [
+            'addPlaylistForm' => $form,
+            'ownedPlaylists' => $ownedPlaylists,
         ]);
     }
 }
