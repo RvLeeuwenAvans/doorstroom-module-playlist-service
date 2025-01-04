@@ -4,11 +4,9 @@ namespace App\DataFixtures;
 
 use App\Entity\Genre;
 use App\Entity\Song;
-use App\Entity\User;
 use App\Repository\GenreRepository;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
-use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 class SongFixtures extends Fixture
 {

@@ -2,8 +2,6 @@
 
 namespace App\DataFixtures;
 
-use App\Entity\Genre;
-use App\Entity\Song;
 use App\Entity\User;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
