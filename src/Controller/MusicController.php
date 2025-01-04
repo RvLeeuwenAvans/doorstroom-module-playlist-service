@@ -52,7 +52,7 @@ class MusicController extends AbstractController
 
         $songCatalog = $entityManager->getRepository(Song::class)->findAll();
         $genres = $entityManager->getRepository(Genre::class)->findAll();
-        $ownedPlaylists = $this->getUser()->getPlaylists();
+        $ownedPlaylists = $this->getUser()->getOwnedPlaylists();
 
         return $this->render('music.html.twig', [
             'addMusicForm' => $form,

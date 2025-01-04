@@ -43,11 +43,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      * @var Collection<int, Playlist>
      */
     #[ORM\OneToMany(targetEntity: Playlist::class, mappedBy: 'Owner', orphanRemoval: true)]
-    private Collection $playlists;
+    private Collection $ownedPlaylists;
+
+    /**
+     * @var Collection<int, Playlist>
+     */
+    #[ORM\ManyToMany(targetEntity: Playlist::class, mappedBy: 'sharedUsers')]
+    private Collection $PlaylistsSharedWithUser;
 
     public function __construct()
     {
-        $this->playlists = new ArrayCollection();
+        $this->ownedPlaylists = new ArrayCollection();
+        $this->PlaylistsSharedWithUser = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -138,30 +145,16 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * @return Collection<int, Playlist>
      */
-    public function getPlaylists(): Collection
+    public function getOwnedPlaylists(): Collection
     {
-        return $this->playlists;
+        return $this->ownedPlaylists;
     }
 
-    public function addPlaylist(Playlist $playlist): static
+    /**
+     * @return Collection<int, Playlist>
+     */
+    public function getPlaylistsSharedWithUser(): Collection
     {
-        if (!$this->playlists->contains($playlist)) {
-            $this->playlists->add($playlist);
-            $playlist->setOwner($this);
-        }
-
-        return $this;
-    }
-
-    public function removePlaylist(Playlist $playlist): static
-    {
-        if ($this->playlists->removeElement($playlist)) {
-            // set the owning side to null (unless already changed)
-            if ($playlist->getOwner() === $this) {
-                $playlist->setOwner(null);
-            }
-        }
-
-        return $this;
+        return $this->PlaylistsSharedWithUser;
     }
 }
