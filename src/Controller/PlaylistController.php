@@ -4,7 +4,9 @@ namespace App\Controller;
 
 use App\Entity\Playlist;
 use App\Entity\Song;
+use App\Entity\User;
 use App\Form\AddPlaylistFormType;
+use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -70,9 +72,15 @@ class PlaylistController extends AbstractController
         ) {
             $playlistSongs = $playlist->getSongs();
 
+            $criteria = new Criteria();
+            // get all users except currently authenticated
+            $criteria->where(Criteria::expr()->neq('id', $this->getUser()->getId()));
+            $users = $entityManager->getRepository(User::class)->matching($criteria);
+
             return $this->render('playlist/view_playlist.html.twig', [
                 "playlist" => $playlist,
                 "playlistSongs" => $playlistSongs,
+                "users" => $users
             ]);
         }
 
@@ -95,8 +103,34 @@ class PlaylistController extends AbstractController
         return $this->redirectToRoute('app_user_playlists');
     }
 
+    #[Route(path: '/playlists/{playlistId}/share', name: 'app_share_playlist', methods: ['POST'])]
+    public function sharePlaylist(
+        int                    $playlistId,
+        Request                $request,
+        EntityManagerInterface $entityManager
+    ): Response
+    {
+        $playlist = $entityManager->getRepository(Playlist::class)->findOneBy(["id" => $playlistId]);
+        $userId = $request->get("user_id");
+
+        if (!empty($userId)) {
+            /** @var User $user */
+            $user = $entityManager->getRepository(User::class)->findOneBy(["id" => $userId]);
+            $isPlaylistShared = $playlist->getSharedUsers()->contains($user);
+
+            if (!$isPlaylistShared) {
+                $playlist->addSharedUser($user);
+            }
+
+            $entityManager->flush();
+        }
+
+        return $this->redirectToRoute('app_view_playlist', ["playlistId" => $playlistId]);
+    }
+
     //todo: separate the get and post method into separate functions
-    #[Route(path: '/playlists/music', name: 'app_add_to_playlist', methods: ['POST'])]
+    #[
+        Route(path: '/playlists/music', name: 'app_add_to_playlist', methods: ['POST'])]
     public function addMusicToPlaylist(
         Request                $request,
         EntityManagerInterface $entityManager
