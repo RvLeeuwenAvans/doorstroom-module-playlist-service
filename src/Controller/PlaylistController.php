@@ -157,8 +157,7 @@ class PlaylistController extends AbstractController
         ]);
     }
 
-    #[
-        Route(path: '/playlists/{playlistId}/music/remove', name: 'app_remove_from_playlist', methods: ['POST'])]
+    #[Route(path: '/playlists/{playlistId}/music/remove', name: 'app_remove_from_playlist', methods: ['POST'])]
     public function removeMusicFromPlaylist(
         int                    $playlistId,
         Request                $request,
