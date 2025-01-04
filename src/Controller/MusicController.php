@@ -13,6 +13,7 @@ use Symfony\Component\Routing\Attribute\Route;
 
 class MusicController extends AbstractController
 {
+    //todo: separate the get and post method into separate functions
     #[Route(path: '/music', name: 'app_music')]
     public function addSong(
         Request                $request,
@@ -51,13 +52,15 @@ class MusicController extends AbstractController
 
         $songCatalog = $entityManager->getRepository(Song::class)->findAll();
         $genres = $entityManager->getRepository(Genre::class)->findAll();
+        $ownedPlaylists = $this->getUser()->getPlaylists();
 
         return $this->render('music.html.twig', [
             'addMusicForm' => $form,
+            'showForm' => $showForm ?? false,
             'songs' => $songCatalog,
+            'userPlaylists' => $ownedPlaylists,
             'genres' => $genres,
             'filter' => $filter,
-            'showForm' => $showForm ?? false
         ]);
     }
 }
