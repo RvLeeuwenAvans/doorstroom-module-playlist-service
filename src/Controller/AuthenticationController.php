@@ -17,13 +17,13 @@ class AuthenticationController extends AbstractController
 {
     #[Route('/register', name: 'app_register')]
     public function register(
-        Request                     $request,
         UserPasswordHasherInterface $userPasswordHasher,
-        EntityManagerInterface      $entityManager
+        EntityManagerInterface      $entityManager,
+        Request                     $request
     ): Response
     {
         if ($this->getUser() !== null) {
-            return $this->redirectToRoute('app_music');
+            return $this->redirectToRoute('app_music_catalog');
         }
 
         $user = new User();

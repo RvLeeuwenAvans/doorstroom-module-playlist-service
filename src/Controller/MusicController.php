@@ -13,12 +13,8 @@ use Symfony\Component\Routing\Attribute\Route;
 
 class MusicController extends AbstractController
 {
-    //todo: separate the get and post method into separate functions
-    #[Route(path: '/music', name: 'app_music')]
-    public function addSong(
-        Request                $request,
-        EntityManagerInterface $entityManager
-    ): Response
+    #[Route(path: '/music', name: 'app_music_catalog', methods: ['GET', 'POST'])]
+    public function musicCatalog(Request $request, EntityManagerInterface $entityManager): Response
     {
         $song = new Song();
         $form = $this->createForm(AddSongFormType::class, $song);
@@ -29,29 +25,32 @@ class MusicController extends AbstractController
             $form->handleRequest($request);
 
             if ($form->isSubmitted()) {
+                $showForm = !$form->isValid();
+
                 if ($form->isValid()) {
                     /** @var string $name */
                     $name = $form->get('name')->getData();
-                    $song->setName($name);
                     /** @var string $band */
                     $band = $form->get('band')->getData();
-                    $song->setBand($band);
                     /** @var Genre $genre */
                     $genre = $form->get('genre')->getData();
-                    $song->setGenre($genre);
                     /** @var string $link */
                     $link = $form->get('link')->getData();
+
+                    $song->setName($name);
+                    $song->setBand($band);
+                    $song->setGenre($genre);
                     $song->setLink($link);
 
                     $entityManager->persist($song);
                     $entityManager->flush();
                 }
             }
-            $showForm = !$form->isValid();
         }
 
         $songCatalog = $entityManager->getRepository(Song::class)->findAll();
         $genres = $entityManager->getRepository(Genre::class)->findAll();
+
         $ownedPlaylists = $this->getUser()->getOwnedPlaylists();
 
         return $this->render('music.html.twig', [
