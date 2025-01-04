@@ -55,8 +55,8 @@ class PlaylistController extends AbstractController
         ]);
     }
 
-    #[Route(path: '/playlists/{playlistId}', name: 'app_view_playlist')]
-    public function viewPlaylist(int $playlistId, EntityManagerInterface $entityManager): Response
+    #[Route(path: '/playlists/{playlistId}', name: 'app_view_playlist', methods: ['GET'])]
+    public function viewPlaylistContents(int $playlistId, EntityManagerInterface $entityManager): Response
     {
         /** @var Playlist $playlist */
         $playlist = $entityManager->getRepository(Playlist::class)->findOneBy(["id" => $playlistId]);
@@ -75,6 +75,20 @@ class PlaylistController extends AbstractController
                 "playlistSongs" => $playlistSongs,
             ]);
         }
+
+        return $this->redirectToRoute('app_user_playlists');
+    }
+
+    #[Route(path: '/playlists/delete/{playlistId}', name: 'app_delete_playlist', methods: ['POST'])]
+    public function deletePlaylist(
+        int                    $playlistId,
+        EntityManagerInterface $entityManager
+    ): Response
+    {
+        $playlist = $entityManager->getRepository(Playlist::class)->findOneBy(["id" => $playlistId]);
+
+        $entityManager->remove($playlist);
+        $entityManager->flush();
 
         return $this->redirectToRoute('app_user_playlists');
     }
