@@ -118,7 +118,9 @@ class PlaylistController extends AbstractController
             $user = $entityManager->getRepository(User::class)->findOneBy(["id" => $userId]);
             $isPlaylistShared = $playlist->getSharedUsers()->contains($user);
 
-            if (!$isPlaylistShared) {
+            if ($isPlaylistShared) {
+                $playlist->removeSharedUser($user);
+            } else {
                 $playlist->addSharedUser($user);
             }
 
