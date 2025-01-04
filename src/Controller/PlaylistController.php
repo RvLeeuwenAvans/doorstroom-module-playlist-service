@@ -156,4 +156,22 @@ class PlaylistController extends AbstractController
             'ownedPlaylists' => $ownedPlaylists,
         ]);
     }
+
+    #[Route(path: '/playlists/{playlistId}/music/remove', name: 'app_remove_from_playlist', methods: ['POST'])]
+    public function removeMusicFromPlaylist(
+        int                    $playlistId,
+        Request                $request,
+        EntityManagerInterface $entityManager
+    ): Response
+    {
+        $songId = $request->get("song_id");
+
+        $song = $entityManager->getRepository(Song::class)->find($songId);
+        $playlist = $entityManager->getRepository(Playlist::class)->find($playlistId);
+
+        $playlist->removeSong($song);
+        $entityManager->flush();
+
+        return $this->redirectToRoute('app_user_playlists');
+    }
 }

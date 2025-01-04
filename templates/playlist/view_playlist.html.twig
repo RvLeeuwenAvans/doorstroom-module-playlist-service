@@ -36,14 +36,17 @@
                                             {{ song.link }}
                                         </a>
                                     </div>
-                                    <div class="lg:w-1/5">
-                                        <form class="flex justify-center" method="post" action="/playlists/music">
-                                            <button type="submit" value="{{ song.id }}" name="song_id"
-                                                    class="bg-theme-red text-white font-headingText p-2 h-full self-end">
-                                                Remove
-                                            </button>
-                                        </form>
-                                    </div>
+                                    {% if app.user == playlist.owner %}
+                                        <div class="lg:w-1/5">
+                                            <form class="flex justify-center" method="post"
+                                                  action="/playlists/{{ playlist.id }}/music/remove">
+                                                <button type="submit" value="{{ song.id }}" name="song_id"
+                                                        class="bg-theme-red text-white font-headingText p-2 h-full self-end">
+                                                    Remove
+                                                </button>
+                                            </form>
+                                        </div>
+                                    {% endif %}
                                 </div>
                             </li>
                         {% endfor %}
