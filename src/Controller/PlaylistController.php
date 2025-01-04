@@ -87,8 +87,10 @@ class PlaylistController extends AbstractController
     {
         $playlist = $entityManager->getRepository(Playlist::class)->findOneBy(["id" => $playlistId]);
 
-        $entityManager->remove($playlist);
-        $entityManager->flush();
+        if ($this->getUser() === $playlist->getOwner()) {
+            $entityManager->remove($playlist);
+            $entityManager->flush();
+        }
 
         return $this->redirectToRoute('app_user_playlists');
     }
