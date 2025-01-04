@@ -11,10 +11,6 @@
     {% block stylesheets %}
         <link rel="stylesheet" href="{{ asset('styles/app.css') }}">
     {% endblock %}
-
-    {#    {% block javascripts %} #}
-    {#        {% block importmap %}{{ importmap('app') }}{% endblock %} #}
-    {#    {% endblock %} #}
 </head>
 <body>
     <nav id="positional_wrapper" class="relative">
@@ -30,7 +26,7 @@
                                   lg:relative bg-theme-blue lg:md:bg-opacity-0 sm:bg-opacity-95">
                     <div class="flex flex-col h-full items-center justify-center lg:flex-row text-white text-xl">
                         {% if app.user %}
-                            <a class="pr-4 hover:text:theme-accent-2" href="{{ path('app_music') }}">Music Catalog</a>
+                            <a class="pr-4 hover:text:theme-accent-2" href="{{ path('app_music_catalog') }}">Music Catalog</a>
                             <a class="pr-4" href="{{ path('app_shared_playlists') }}">Shared playlists</a>
                             <a class="pr-4" href="{{ path('app_user_playlists') }}">My playlists</a>
                             <a class="pr-4 text-theme-red" href="{{ path('app_logout') }}">Logout</a>

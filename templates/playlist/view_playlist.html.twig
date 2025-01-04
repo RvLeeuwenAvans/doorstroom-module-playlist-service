@@ -39,7 +39,7 @@
                                     {% if app.user == playlist.owner %}
                                         <div class="lg:w-1/5">
                                             <form class="flex justify-center" method="post"
-                                                  action="/playlists/{{ playlist.id }}/music/remove">
+                                                  action="{{ path('app_music_remove_from_playlist', {playlistId: playlist.id}) }}">
                                                 <button type="submit" value="{{ song.id }}" name="song_id"
                                                         class="bg-theme-red text-white font-headingText p-2 h-full self-end">
                                                     Remove
@@ -77,22 +77,17 @@
                                     </div>
                                     <div class="lg:w-1/5">
                                         <form class="flex justify-center" method="post"
-                                              action="/playlists/{{ playlist.id }}/share">
-                                            {% if user.PlaylistsSharedWithUser.contains(playlist) %}
-                                                <button type="submit"
-                                                        name="user_id"
-                                                        value="{{ user.id }}"
-                                                        class="bg-theme-red text-white font-headingText p-2 h-full self-end">
+                                              action="{{ path('app_share_playlist', {playlistId: playlist.id}) }}">
+                                            <button type="submit"
+                                                    name="user_id"
+                                                    value="{{ user.id }}"
+                                                    class="bg-theme-red text-white font-headingText p-2 h-full self-end">
+                                                {% if user.playlistsSharedWithUser.contains(playlist) %}
                                                     Stop sharing
-                                                </button>
-                                            {% else %}
-                                                <button type="submit"
-                                                        name="user_id"
-                                                        value="{{ user.id }}"
-                                                        class="bg-theme-red text-white font-headingText p-2 h-full self-end">
+                                                {% else %}
                                                     Share
-                                                </button>
-                                            {% endif %}
+                                                {% endif %}
+                                            </button>
                                         </form>
                                     </div>
                                 </div>

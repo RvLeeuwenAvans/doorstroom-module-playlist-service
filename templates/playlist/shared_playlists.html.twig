@@ -24,17 +24,17 @@
                                     </div>
                                     <div class="lg:w-1/5">
                                         <form class="flex justify-center" method="get"
-                                              action="/playlists/{{ playlist.id }}">
+                                              action="{{ path('app_playlist', {playlistId: playlist.id}) }}">
                                             <button type="submit"
                                                     class="bg-theme-red text-white font-headingText p-2 h-full self-end">
-                                                view Playlist
+                                                view playlist
                                             </button>
                                         </form>
                                     </div>
                                     <div class="lg:w-1/5">
                                         <form class="flex justify-center" method="post"
-                                              action="/playlists/{{ playlist.id }}/share">
-                                            {% if app.user.PlaylistsSharedWithUser.contains(playlist) %}
+                                              action="{{ path('app_share_playlist', {playlistId: playlist.id}) }}">
+                                            {% if app.user.playlistsSharedWithUser.contains(playlist) %}
                                                 <button type="submit"
                                                         name="user_id"
                                                         value="{{ app.user.id }}"
