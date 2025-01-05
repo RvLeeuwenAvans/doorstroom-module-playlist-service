@@ -11,7 +11,7 @@ use Doctrine\Persistence\ObjectManager;
 class SongFixtures extends Fixture
 {
     // Song name, band name, genre (linked by ID as FK), Link to song
-    const SONGS = [
+    private const SONGS = [
         [
             "SkullSeeker",
             "Eternal Champion",
@@ -50,11 +50,6 @@ class SongFixtures extends Fixture
         ],
 
     ];
-
-    public function __construct(readonly GenreRepository $genreRepository)
-    {
-        // Empty PHP 8.1 and up have implicit variable assigment if the visibility is declared in the constructor.
-    }
 
     public function load(ObjectManager $manager): void
     {

@@ -10,7 +10,7 @@ use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 class UserFixtures extends Fixture
 {
     // Key(email), ['name', 'unwashed password', 'user role']
-    const USERS = [
+    private const USERS = [
         'adminAccount@test.com' => ["admin", "adminTest_123", "ROLE_ADMIN"],
         'testUser@test.com' => ["user", "userTest_123", "ROLE_USER"],
         'testUserHenk@test.com' => ["Henk", "HenkTest_123", "ROLE_USER"],

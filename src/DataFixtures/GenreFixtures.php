@@ -8,7 +8,7 @@ use Doctrine\Persistence\ObjectManager;
 
 class GenreFixtures extends Fixture
 {
-    const GENRES = [
+    private const GENRES = [
         'Metal',
         'Rock',
         'Pop'
