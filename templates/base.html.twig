@@ -4,10 +4,6 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>{% block title %}Welcome!{% endblock %}</title>
-        <link rel="icon"
-              href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22>
-                  <text y=%221.2em%22 font-size=%2296%22>⚫️</text>
-                  <text y=%221.3em%22 x=%220.2em%22 font-size=%2276%22 fill=%22%23fff%22>sf</text></svg>">
         {% block stylesheets %}
             <link rel="stylesheet" href="{{ asset('styles/app.css') }}">
         {% endblock %}
@@ -18,9 +14,7 @@
                 <div class="flex justify-end">
                     <input type="checkbox" name="hamburger" id="hamburger" class="peer hidden">
                     <label for="hamburger" class="peer-checked:hamburger relative z-20 p-6 cursor-pointer lg:hidden">
-                        <div class="m-auto h-0.5 w-6 rounded bg-white transition duration-200"></div>
-                        <div class="m-auto mt-2 h-0.5 w-6 rounded bg-white transition duration-200"></div>
-                        <div class="m-auto mt-2 h-0.5 w-6 rounded bg-white"></div>
+                        <span class="text-3xl text-white">&#8801;</span>
                     </label>
                     <div class="peer-checked:translate-x-0 fixed inset-0 translate-x-[-100%] lg:translate-x-0
                                       lg:relative bg-theme-blue lg:md:bg-opacity-0 sm:bg-opacity-95">

@@ -56,7 +56,7 @@ class AuthenticationController extends AbstractController
     public function login(AuthenticationUtils $authenticationUtils): Response
     {
         if ($this->getUser() !== null) {
-            return $this->redirectToRoute('app_music');
+            return $this->redirectToRoute('app_music_catalog');
         }
 
         // Handling of the form submission and user authentication is handled

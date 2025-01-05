@@ -59,8 +59,8 @@
                                             <form class="flex justify-center" method="post"
                                                   action="{{ path('app_add_music_to_playlist', {songId: song.id}) }}">
                                                 <div class="flex flex-col">
-                                                    <label for="available_playlists_{{ song.name }}">playlist:</label>
-                                                    <select name="playlist_id" id="available_playlists_{{ song.name }}">
+                                                    <label for="available_playlists_{{ song.id }}">playlist:</label>
+                                                    <select name="playlist_id" id="available_playlists_{{ song.id }}">
                                                         {% for playlist in userPlaylists %}
                                                             <option value="{{ playlist.id }}">{{ playlist.name }}</option>
                                                         {% endfor %}
