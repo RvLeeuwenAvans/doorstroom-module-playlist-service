@@ -6,6 +6,7 @@ use App\Entity\Playlist;
 use App\Entity\Song;
 use App\Entity\User;
 use App\Form\AddPlaylistFormType;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -15,12 +16,8 @@ use Symfony\Component\Routing\Attribute\Route;
 
 class PlaylistController extends AbstractController
 {
-    //todo: separate the get and post method into separate functions
-    #[Route(path: '/playlists', name: 'app_user_playlists')]
-    public function addPlaylist(
-        Request                $request,
-        EntityManagerInterface $entityManager
-    ): Response
+    #[Route(path: '/playlists', name: 'app_user_playlists', methods: ['GET', 'POST'])]
+    public function userPlaylists(Request $request, EntityManagerInterface $entityManager): Response
     {
         $playlist = new Playlist();
         $form = $this->createForm(AddPlaylistFormType::class, $playlist);
@@ -31,67 +28,83 @@ class PlaylistController extends AbstractController
             if ($form->isSubmitted() && $form->isValid()) {
                 /** @var string $name */
                 $name = $form->get('name')->getData();
+                /** @var string $name */
+                $user = $this->getUser();
+
                 $playlist->setName($name);
-                $playlist->setOwner($this->getUser());
+                $playlist->setOwner($user);
 
                 $entityManager->persist($playlist);
                 $entityManager->flush();
             }
         }
 
-        $ownedPlaylists = $this->getUser()->getOwnedPlaylists();
+        /**
+         * get all playlists from currently authenticated User.
+         * @var Collection $userOwnedPlaylists
+         */
+        $userOwnedPlaylists = $this->getUser()->getOwnedPlaylists();
 
         return $this->render('playlist/owned_playlists.html.twig', [
             'addPlaylistForm' => $form,
-            'ownedPlaylists' => $ownedPlaylists,
+            'ownedPlaylists' => $userOwnedPlaylists,
         ]);
     }
 
     #[Route(path: '/playlists/shared', name: 'app_shared_playlists', methods: ['GET'])]
-    public function viewSharedPlaylists(): Response
+    public function sharedPlaylists(): Response
     {
-        $sharedPlaylists = $this->getUser()->getPlaylistsSharedWithUser();
+        /**
+         * get all playlists from shared with authenticated User.
+         * @var Collection $sharedPlaylists
+         */
+        $playlistsSharedWithUser = $this->getUser()->getPlaylistsSharedWithUser();
 
         return $this->render('playlist/shared_playlists.html.twig', [
-            'sharedPlaylists' => $sharedPlaylists,
+            'sharedPlaylists' => $playlistsSharedWithUser,
         ]);
     }
 
-    #[Route(path: '/playlists/{playlistId}', name: 'app_view_playlist', methods: ['GET'])]
-    public function viewPlaylistContents(int $playlistId, EntityManagerInterface $entityManager): Response
+    #[Route(path: '/playlists/{playlistId}', name: 'app_playlist', methods: ['GET'])]
+    public function playlistDetails(int $playlistId, EntityManagerInterface $entityManager): Response
     {
         /** @var Playlist $playlist */
         $playlist = $entityManager->getRepository(Playlist::class)->findOneBy(["id" => $playlistId]);
 
-        // check if user is allowed to view playlist
-        if (
-            !is_null($playlist) && (
+        if (!is_null($playlist)) {
+            // Is User allowed to view the playlist
+            $isAllowed = (
                 $playlist->getOwner() === $this->getUser() ||
                 $playlist->getSharedUsers()->contains($this->getUser())
-            )
-        ) {
-            $playlistSongs = $playlist->getSongs();
+            );
 
-            $criteria = new Criteria();
-            // get all users except currently authenticated
-            $criteria->where(Criteria::expr()->neq('id', $this->getUser()->getId()));
-            $users = $entityManager->getRepository(User::class)->matching($criteria);
+            if ($isAllowed) {
+                $playlistSongs = $playlist->getSongs();
+                $criteria = new Criteria();
 
-            return $this->render('playlist/view_playlist.html.twig', [
-                "playlist" => $playlist,
-                "playlistSongs" => $playlistSongs,
-                "users" => $users
-            ]);
+                /** @var Int $authenticatedUserId */
+                $authenticatedUserId = $this->getUser()->getId();
+                $criteria->where(Criteria::expr()->neq('id', $authenticatedUserId));
+
+                /**
+                 * get all users except currently authenticated
+                 * @var User[] $users
+                 */
+                $users = $entityManager->getRepository(User::class)->matching($criteria);
+
+                return $this->render('playlist/view_playlist.html.twig', [
+                    "playlist" => $playlist,
+                    "playlistSongs" => $playlistSongs,
+                    "users" => $users
+                ]);
+            }
         }
 
         return $this->redirectToRoute('app_user_playlists');
     }
 
-    #[Route(path: '/playlists/delete/{playlistId}', name: 'app_delete_playlist', methods: ['POST'])]
-    public function deletePlaylist(
-        int                    $playlistId,
-        EntityManagerInterface $entityManager
-    ): Response
+    #[Route(path: '/playlists/{playlistId}/delete', name: 'app_delete_playlist', methods: ['POST'])]
+    public function deletePlaylist(int $playlistId, EntityManagerInterface $entityManager): Response
     {
         $playlist = $entityManager->getRepository(Playlist::class)->findOneBy(["id" => $playlistId]);
 
@@ -103,12 +116,42 @@ class PlaylistController extends AbstractController
         return $this->redirectToRoute('app_user_playlists');
     }
 
+    #[Route(path: '/playlists/music/{songId}', name: 'app_add_music_to_playlist', methods: ['POST'])]
+    public function addMusicToPlaylist(int $songId, Request $request, EntityManagerInterface $entityManager): Response
+    {
+        $playlistId = $request->get("playlist_id");
+        $playlist = !is_null($playlistId) ? $entityManager->getRepository(Playlist::class)->find($playlistId) : null;
+
+        if (!is_null($playlist)) {
+            $song = $entityManager->getRepository(Song::class)->find($songId);
+
+            $playlist->addSong($song);
+
+            $entityManager->persist($playlist);
+            $entityManager->flush();
+        }
+
+        return $this->redirectToRoute('app_music_catalog');
+    }
+
+    #[Route(path: '/playlists/{playlistId}/music/remove', name: 'app_music_remove_from_playlist', methods: ['POST'])]
+    public function removeMusicFromPlaylist(int $playlistId, Request $request, EntityManagerInterface $entityManager): Response
+    {
+        $songId = $request->get("song_id");
+
+        $song = $entityManager->getRepository(Song::class)->find($songId);
+        $playlist = $entityManager->getRepository(Playlist::class)->find($playlistId);
+
+        if (!is_null($playlist) && !is_null($song)) {
+            $playlist->removeSong($song);
+            $entityManager->flush();
+        }
+
+        return $this->redirectToRoute('app_playlist', ["playlistId" => $playlistId]);
+    }
+
     #[Route(path: '/playlists/{playlistId}/share', name: 'app_share_playlist', methods: ['POST'])]
-    public function sharePlaylist(
-        int                    $playlistId,
-        Request                $request,
-        EntityManagerInterface $entityManager
-    ): Response
+    public function sharePlaylist(int $playlistId, Request $request, EntityManagerInterface $entityManager): Response
     {
         $playlist = $entityManager->getRepository(Playlist::class)->findOneBy(["id" => $playlistId]);
         $userId = $request->get("user_id");
@@ -127,51 +170,6 @@ class PlaylistController extends AbstractController
             $entityManager->flush();
         }
 
-        return $this->redirectToRoute('app_view_playlist', ["playlistId" => $playlistId]);
-    }
-
-    //todo: separate the get and post method into separate functions
-    #[
-        Route(path: '/playlists/music', name: 'app_add_to_playlist', methods: ['POST'])]
-    public function addMusicToPlaylist(
-        Request                $request,
-        EntityManagerInterface $entityManager
-    ): Response
-    {
-        $form = $this->createForm(AddPlaylistFormType::class);
-
-        $songId = $request->get("song_id");
-        $playlistId = $request->get("playlist_id");
-        $song = $entityManager->getRepository(Song::class)->find($songId);
-        $playlist = $entityManager->getRepository(Playlist::class)->find($playlistId);
-        $playlist->addSong($song);
-
-        $entityManager->persist($playlist);
-        $entityManager->flush();
-
-        $ownedPlaylists = $this->getUser()->getOwnedPlaylists();
-
-        return $this->render('playlist/owned_playlists.html.twig', [
-            'addPlaylistForm' => $form,
-            'ownedPlaylists' => $ownedPlaylists,
-        ]);
-    }
-
-    #[Route(path: '/playlists/{playlistId}/music/remove', name: 'app_remove_from_playlist', methods: ['POST'])]
-    public function removeMusicFromPlaylist(
-        int                    $playlistId,
-        Request                $request,
-        EntityManagerInterface $entityManager
-    ): Response
-    {
-        $songId = $request->get("song_id");
-
-        $song = $entityManager->getRepository(Song::class)->find($songId);
-        $playlist = $entityManager->getRepository(Playlist::class)->find($playlistId);
-
-        $playlist->removeSong($song);
-        $entityManager->flush();
-
-        return $this->redirectToRoute('app_user_playlists');
+        return $this->redirectToRoute('app_playlist', ["playlistId" => $playlistId]);
     }
 }

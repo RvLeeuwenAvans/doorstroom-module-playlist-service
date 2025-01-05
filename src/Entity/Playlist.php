@@ -31,7 +31,7 @@ class Playlist
     /**
      * @var Collection<int, User>
      */
-    #[ORM\ManyToMany(targetEntity: User::class, inversedBy: 'PlaylistsSharedWithUser')]
+    #[ORM\ManyToMany(targetEntity: User::class, inversedBy: 'playlistsSharedWithUser')]
     private Collection $sharedUsers;
 
     public function __construct()

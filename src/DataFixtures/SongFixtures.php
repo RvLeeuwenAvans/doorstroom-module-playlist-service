@@ -4,16 +4,14 @@ namespace App\DataFixtures;
 
 use App\Entity\Genre;
 use App\Entity\Song;
-use App\Entity\User;
 use App\Repository\GenreRepository;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
-use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 class SongFixtures extends Fixture
 {
     // Song name, band name, genre (linked by ID as FK), Link to song
-    const SONGS = [
+    private const SONGS = [
         [
             "SkullSeeker",
             "Eternal Champion",
@@ -52,11 +50,6 @@ class SongFixtures extends Fixture
         ],
 
     ];
-
-    public function __construct(readonly GenreRepository $genreRepository)
-    {
-        // Empty PHP 8.1 and up have implicit variable assigment if the visibility is declared in the constructor.
-    }
 
     public function load(ObjectManager $manager): void
     {

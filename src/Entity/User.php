@@ -49,12 +49,12 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      * @var Collection<int, Playlist>
      */
     #[ORM\ManyToMany(targetEntity: Playlist::class, mappedBy: 'sharedUsers')]
-    private Collection $PlaylistsSharedWithUser;
+    private Collection $playlistsSharedWithUser;
 
     public function __construct()
     {
         $this->ownedPlaylists = new ArrayCollection();
-        $this->PlaylistsSharedWithUser = new ArrayCollection();
+        $this->playlistsSharedWithUser = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -155,6 +155,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     public function getPlaylistsSharedWithUser(): Collection
     {
-        return $this->PlaylistsSharedWithUser;
+        return $this->playlistsSharedWithUser;
     }
 }

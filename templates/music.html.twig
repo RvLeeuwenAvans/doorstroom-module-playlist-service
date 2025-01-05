@@ -20,7 +20,7 @@
                                 <label for="genre" class="sm:md:block lg:inline">Filter by genre:</label>
                                 <select name="genre" id="genre" onchange="submit()">
                                     <option selected disabled hidden>Select filter</option>
-                                    <option value="">Everything</option>
+                                    <option value="everything">Everything</option>
                                     {% for genre in genres %}
                                         <option>{{ genre.name }}</option>
                                     {% endfor %}
@@ -56,10 +56,11 @@
                                             </a>
                                         </div>
                                         <div class="lg:w-1/5">
-                                            <form class="flex justify-center" method="post" action="/playlists/music">
+                                            <form class="flex justify-center" method="post"
+                                                  action="{{ path('app_add_music_to_playlist', {songId: song.id}) }}">
                                                 <div class="flex flex-col">
-                                                    <label for="available_playlists_{{ song.name }}">playlist:</label>
-                                                    <select name="playlist_id" id="available_playlists_{{ song.name }}">
+                                                    <label for="available_playlists_{{ song.id }}">playlist:</label>
+                                                    <select name="playlist_id" id="available_playlists_{{ song.id }}">
                                                         {% for playlist in userPlaylists %}
                                                             <option value="{{ playlist.id }}">{{ playlist.name }}</option>
                                                         {% endfor %}

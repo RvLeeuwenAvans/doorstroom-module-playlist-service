@@ -14,32 +14,32 @@
                             <li class="pb-3 sm:pb-4 pt-3 sm:pt-4">
                                 <div class="flex items-center flex flex-col lg:flex-row justify-around">
                                     <div class="flex-shrink-0 w-1/5 text-center">
-                                        Name: {{ playlist.name }}
+                                        Playlist name: {{ playlist.name }}
                                     </div>
                                     <div class="flex-shrink-0 w-1/5 text-center">
-                                        Songs: {{ playlist.songs.count }}
+                                        Song count: {{ playlist.songs.count }}
                                     </div>
                                     <div class="flex-shrink-0 w-1/5 text-center">
-                                        Shared: {{ playlist.sharedUsers.count }}
+                                        Shared user count: {{ playlist.sharedUsers.count }}
                                     </div>
                                     <div class="lg:w-1/5">
                                         <form class="flex justify-center" method="get"
-                                              action="/playlists/{{ playlist.id }}">
+                                              action="{{ path('app_playlist', {playlistId: playlist.id}) }}">
                                             <button type="submit"
-                                                    class="bg-theme-red text-white font-headingText p-2 h-full self-end">
-                                                view Playlist
+                                                    class="bg-theme-red text-white font-headingText p-2 h-full self-end m-1">
+                                                view playlist
                                             </button>
                                         </form>
                                     </div>
                                     <div class="lg:w-1/5">
                                         <form class="flex justify-center" method="post"
-                                              action="/playlists/{{ playlist.id }}/share">
-                                            {% if app.user.PlaylistsSharedWithUser.contains(playlist) %}
+                                              action="{{ path('app_share_playlist', {playlistId: playlist.id}) }}">
+                                            {% if app.user.playlistsSharedWithUser.contains(playlist) %}
                                                 <button type="submit"
                                                         name="user_id"
                                                         value="{{ app.user.id }}"
-                                                        class="bg-theme-red text-white font-headingText p-2 h-full self-end">
-                                                    Stop sharing
+                                                        class="bg-theme-red text-white font-headingText p-2 h-full self-end m-1">
+                                                    Unsubscribe
                                                 </button>
                                             {% endif %}
                                         </form>

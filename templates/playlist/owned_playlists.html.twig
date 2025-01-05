@@ -23,33 +23,34 @@
                             <li class="pb-3 sm:pb-4 pt-3 sm:pt-4">
                                 <div class="flex items-center flex flex-col lg:flex-row justify-around">
                                     <div class="flex-shrink-0 w-1/5 text-center">
-                                        Name: {{ playlist.name }}
+                                        Playlist name: {{ playlist.name }}
                                     </div>
-                                    <div class="flex-shrink-0 w-1/5 text-center">
-                                        Songs: {{ playlist.songs.count }}
+                                    <div class="flex-shrink-0 w-1/6 text-center">
+                                        Song count: {{ playlist.songs.count }}
                                     </div>
-                                    <div class="flex-shrink-0 w-1/5 text-center">
-                                        Shared: {{ playlist.sharedUsers.count }}
+                                    <div class="flex-shrink-0 w-2/6 text-center">
+                                        Shared user count: {{ playlist.sharedUsers.count }}
                                     </div>
-                                    <div class="lg:w-1/5">
+                                    <div class="lg:w-1/6">
                                         <form class="flex justify-center" method="get"
-                                              action="/playlists/{{ playlist.id }}">
+                                              action="{{ path('app_playlist', {playlistId: playlist.id}) }}">
                                             <button type="submit"
-                                                    class="bg-theme-red text-white font-headingText p-2 h-full self-end">
-                                                view Playlist
+                                                    class="bg-theme-red text-white font-headingText p-2 m-1 h-full self-end">
+                                                view playlist
                                             </button>
                                         </form>
                                     </div>
-                                    <div class="lg:w-1/5 flex justify-center">
-                                        <a href="{{ path('app_music') }}"
-                                           class="bg-theme-red text-white font-headingText p-2 h-full self-end">Add
-                                            music</a>
+                                    <div class="lg:w-1/6 flex justify-center">
+                                        <a href="{{ path('app_music_catalog') }}"
+                                           class="bg-theme-red text-white font-headingText p-2 m-1 h-full self-end">
+                                            Add music
+                                        </a>
                                     </div>
-                                    <div class="lg:w-1/5">
+                                    <div class="lg:w-1/6">
                                         <form class="flex justify-center" method="post"
-                                              action="/playlists/delete/{{ playlist.id }}">
+                                              action="{{ path('app_delete_playlist', {playlistId: playlist.id}) }}">
                                             <button type="submit"
-                                                    class="bg-theme-red text-white font-headingText p-2 h-full self-end">
+                                                    class="bg-theme-red text-white font-headingText p-2 m-1 h-full self-end">
                                                 Delete
                                             </button>
                                         </form>
@@ -64,7 +65,7 @@
                 <div class="p-4 bg-theme-blue flex justify-center w-full rounded-tr-3xl">
                     <h1 class="font-headingText font-medium text-5xl text-theme-accent-1">Create a playlist</h1>
                 </div>
-                <div id="playlist_management_ribbon" class="bg-theme-accent-3 p-2 flex justify-center lg:justify-end">
+                <div id="create_playlist_management_ribbon" class="bg-theme-accent-3 p-2 flex justify-center lg:justify-end">
                     <label for="create_playlist"
                            class="peer-checked:create_playlist bg-theme-red text-white font-headingText p-2">
                         <span>&#8592;</span> Back to Playlists
